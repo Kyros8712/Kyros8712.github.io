@@ -1,13 +1,203 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
-    <title>我的第一個網頁</title>
+    <title>訂單計算機</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .item {
+            margin-bottom: 10px;
+        }
+
+        .item label {
+            display: inline-block;
+            width: 250px;
+        }
+
+        #totalOutput {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .info-field {
+            margin-bottom: 15px;
+        }
+
+        .info-field label {
+            display: inline-block;
+            width: 80px;
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>哈囉，世界！</h1>
-    <p>這是我的第一個 HTML 網頁。我正在學習如何建立它。</p>
-    
+    <h1>麻老六滷味訂單-測試</h1>
+
+    <fieldset>
+        <legend>訂單資訊</legend>
+        <div class="info-field">
+            <label for="orderer">訂購人：</label>
+            <input type="text" id="orderer">
+        </div>
+        <div class="info-field">
+            <label for="phone">電話：</label>
+            <input type="tel" id="phone">
+        </div>
+        <div class="info-field">
+            <label for="leader">團長：</label>
+            <input type="text" id="leader">
+        </div>
+    </fieldset>
+
+    <hr>
+
+    <div id="menu">
+        <div class="item">
+            <label>1. 鴨頭 (175元)</label>
+            <input type="number" data-price="175" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>2. 鴨翅 (175元)</label>
+            <input type="number" data-price="175" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>3. 鴨舌 (130元)</label>
+            <input type="number" data-price="130" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>4. 鴨腳 (70元)</label>
+            <input type="number" data-price="70" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>5. 雞腳 (70元)</label>
+            <input type="number" data-price="70" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>6. 雞架 (80元)</label>
+            <input type="number" data-price="80" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>7. 鴨脖 (80元)</label>
+            <input type="number" data-price="80" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>8. 雞心 (80元)</label>
+            <input type="number" data-price="80" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>9. 雞胗 (80元)</label>
+            <input type="number" data-price="80" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>10. 鴨腱頭 (80元)</label>
+            <input type="number" data-price="80" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>11. 烏蛋 (80元)</label>
+            <input type="number" data-price="80" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>12. 蓮藕 (100元)</label>
+            <input type="number" data-price="100" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>13. 豆干 (50元)</label>
+            <input type="number" data-price="50" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>14. 百頁豆腐 (50元)</label>
+            <input type="number" data-price="50" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>15. 海帶 (50元)</label>
+            <input type="number" data-price="50" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>16. 米血 (60元)</label>
+            <input type="number" data-price="60" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>17. 甜不辣 (60元)</label>
+            <input type="number" data-price="60" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>18. 香菇 (70元)</label>
+            <input type="number" data-price="70" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>19. 芋粿 (70元)</label>
+            <input type="number" data-price="70" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>20. A組合（海帶+百頁豆腐+香菇）(80元)</label>
+            <input type="number" data-price="80" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>21. B組合（芋粿+米血+甜不辣）(80元)</label>
+            <input type="number" data-price="80" value="0" min="0">
+        </div>
+        <div class="item">
+            <label>22. C組合（鴨皮+鴨脖+鵝肝+雞胗）(100元)</label>
+            <input type="number" data-price="100" value="0" min="0">
+        </div>
+    </div>
+
+    <hr>
+
+    <button onclick="calculateTotal()">計算總金額</button>
+
+    <div id="results">
+        <h3>訂單明細：</h3>
+        <p id="outputDetails"></p>
+    </div>
+
+    <script>
+        function calculateTotal() {
+            // 抓取訂單資訊
+            const orderer = document.getElementById("orderer").value;
+            const phone = document.getElementById("phone").value;
+            const leader = document.getElementById("leader").value;
+
+            // 抓取品項並計算總價
+            const items = document.querySelectorAll('#menu .item input');
+            let total = 0;
+            let details = '';
+
+            items.forEach(item => {
+                const quantity = parseInt(item.value);
+                const price = parseInt(item.getAttribute('data-price'));
+                const itemName = item.previousElementSibling.textContent.split('(')[0].trim();
+
+                if (quantity > 0) {
+                    total += quantity * price;
+                    details += `${itemName} * ${quantity}<br>`;
+                }
+            });
+
+            // 將所有資訊組合在一起
+            const fullOutput = `
+                訂購人：${orderer}<br>
+                電話：${phone}<br>
+                團長：${leader}<br>
+                ---<br>
+                ${details}
+                <br>
+                <span style="font-size: 24px; font-weight: bold;">總金額：${total} 元</span>
+            `;
+
+            // 輸出結果到同一個區塊
+            document.getElementById('outputDetails').innerHTML = fullOutput;
+        }
+    </script>
+
 </body>
+
 </html>
