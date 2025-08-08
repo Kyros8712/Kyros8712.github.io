@@ -174,6 +174,16 @@
                     details += `${itemName} * ${quantity}<br>`;
                 }
             });
+            
+            // 獲取並格式化當前時間
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            const day = now.getDate().toString().padStart(2, '0');
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            const nowFormatted = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 
             // 將所有資訊組合在一起
             const fullOutput = `
@@ -183,6 +193,8 @@
                 訂購人：${orderer}<br>
                 電話：${phone}<br>
                 團長：${leader}<br>
+                -------------------------------------------<br>
+                訂單時間：${nowFormatted}<br>
                 -------------------------------------------<br>
                 ${details}
                 <br>
