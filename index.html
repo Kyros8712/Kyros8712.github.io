@@ -62,83 +62,83 @@
     <div id="menu">
         <p>份量依照訂購單為主，此工具主要用來方便統計及確認。</p>
         <div class="item">
-            <label>1. 鴨頭 (175元/份)</label>
+            <label>鴨頭 (175元/份)</label>
             <input type="number" data-price="175" value="0" min="0">
         </div>
         <div class="item">
-            <label>2. 鴨翅 (175元/份)</label>
+            <label>鴨翅 (175元/份)</label>
             <input type="number" data-price="175" value="0" min="0">
         </div>
         <div class="item">
-            <label>3. 鴨舌 (130元/份)</label>
+            <label>鴨舌 (130元/份)</label>
             <input type="number" data-price="130" value="0" min="0">
         </div>
         <div class="item">
-            <label>4. 雞腳 (70元/份)</label>
+            <label>雞腳 (70元/份)</label>
             <input type="number" data-price="70" value="0" min="0">
         </div>
         <div class="item">
-            <label>5. 雞架 (80元/份)</label>
+            <label>雞架 (80元/份)</label>
             <input type="number" data-price="80" value="0" min="0">
         </div>
         <div class="item">
-            <label>6. 鴨脖 (80元/份)</label>
+            <label>鴨脖 (80元/份)</label>
             <input type="number" data-price="80" value="0" min="0">
         </div>
         <div class="item">
-            <label>7. 雞心 (80元/份)</label>
+            <label>雞心 (80元/份)</label>
             <input type="number" data-price="80" value="0" min="0">
         </div>
         <div class="item">
-            <label>8. 雞胗 (80元/份)</label>
+            <label>雞胗 (80元/份)</label>
             <input type="number" data-price="80" value="0" min="0">
         </div>
         <div class="item">
-            <label>9. 鴨腱頭 (80元/份)</label>
+            <label>鴨腱頭 (80元/份)</label>
             <input type="number" data-price="80" value="0" min="0">
         </div>
         <div class="item">
-            <label>10. 烏蛋 (80元/份)</label>
+            <label>烏蛋 (80元/份)</label>
             <input type="number" data-price="80" value="0" min="0">
         </div>
         <div class="item">
-            <label>11. 蓮藕 (100元/份)</label>
+            <label>蓮藕 (100元/份)</label>
             <input type="number" data-price="100" value="0" min="0">
         </div>
         <div class="item">
-            <label>12. 豆干 (50元/份)</label>
+            <label>豆干 (50元/份)</label>
             <input type="number" data-price="50" value="0" min="0">
         </div>
         <div class="item">
-            <label>13. 百頁豆腐 (50元/份)</label>
+            <label>百頁豆腐 (50元/份)</label>
             <input type="number" data-price="50" value="0" min="0">
         </div>
         <div class="item">
-            <label>14. 海帶 (50元/份)</label>
+            <label>海帶 (50元/份)</label>
             <input type="number" data-price="50" value="0" min="0">
         </div>
         <div class="item">
-            <label>15. 米血 (60元/份)</label>
+            <label>米血 (60元/份)</label>
             <input type="number" data-price="60" value="0" min="0">
         </div>
         <div class="item">
-            <label>16. 甜不辣 (60元/份)</label>
+            <label>甜不辣 (60元/份)</label>
             <input type="number" data-price="60" value="0" min="0">
         </div>
         <div class="item">
-            <label>17. 香菇 (70元/份)</label>
+            <label>香菇 (70元/份)</label>
             <input type="number" data-price="70" value="0" min="0">
         </div>
         <div class="item">
-            <label>18. 芋粿 (70元/份)</label>
+            <label>芋粿 (70元/份)</label>
             <input type="number" data-price="70" value="0" min="0">
         </div>
         <div class="item">
-            <label>19. A組合（海帶+百頁豆腐+香菇）(80元/份)</label>
+            <label>A組合（海帶+百頁豆腐+香菇）(80元/份)</label>
             <input type="number" data-price="80" value="0" min="0">
         </div>
         <div class="item">
-            <label>20. B組合（芋粿+米血+甜不辣）(80元/份)</label>
+            <label>B組合（芋粿+米血+甜不辣）(80元/份)</label>
             <input type="number" data-price="80" value="0" min="0">
         </div>
     </div>
@@ -163,6 +163,7 @@
             const items = document.querySelectorAll('#menu .item input');
             let total = 0;
             let details = '';
+            let count = 1; // 新增計數器
 
             items.forEach(item => {
                 const quantity = parseInt(item.value);
@@ -171,10 +172,11 @@
 
                 if (quantity > 0) {
                     total += quantity * price;
-                    details += `${itemName} * ${quantity}<br>`;
+                    details += `${count}. ${itemName} * ${quantity}<br>`; // 這裡加上編號
+                    count++; // 每次加入一個品項，計數器就增加
                 }
             });
-            
+
             // 獲取並格式化當前時間
             const now = new Date();
             const year = now.getFullYear();
