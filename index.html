@@ -67,7 +67,7 @@
     <div id="menu">
         <h3> 份量依照訂購單為主，此工具主要用來方便統計及確認。</h3>
         <div class="item">
-            <label>鴨頭 (100元/份)</label>
+            <label>鴨頭 (100元/份, 多份另有優惠)</label>
             <input type="number" data-price="100" value="0" min="0">
         </div>
         <div class="item">
@@ -211,28 +211,51 @@
                     // 判斷是否為組合商品
                     if (itemName.includes('超值豪華組合') || itemName.includes('精選旗艦組合')) {
                         let finalPrice = price; // 預設為原價
+                        let discountMessage = '';
                         if (now < promotionEndDate) {
                             if (itemName.includes('超值豪華組合')) {
                                 if (luxuryComboQuantity >= 10) {
                                     finalPrice = 725;
+                                    discountMessage = '預購十組以上優惠價 85 折';
                                 } else {
                                     finalPrice = 765;
+                                    discountMessage = '預購優惠價 9 折';
                                 }
                             } else if (itemName.includes('精選旗艦組合')) {
                                 if (flagshipComboQuantity >= 10) {
                                     finalPrice = 510;
+                                    discountMessage = '預購十組以上優惠價 85 折';
                                 } else {
                                     finalPrice = 540;
+                                    discountMessage = '預購優惠價 9 折';
                                 }
                             }
                         }
                         
                         comboTotal += quantity * finalPrice;
-                        comboDetails += `${comboCount}. ${itemName} (優惠價 ${finalPrice}) * ${quantity} = ${quantity * finalPrice} 元<br>`;
+                        comboDetails += `${comboCount}. ${itemName} (${discountMessage} ${finalPrice} 元) * ${quantity} = ${quantity * finalPrice} 元<br>`;
                         comboCount++;
+                    }  else if (itemName.includes('鴨頭')) {
+                        let finalPrice;
+                        let displayPrice;
+                        if (quantity % 2 !== 0) { // 奇數
+                            finalPrice = 100 + ((quantity - 1) / 2) * 175;
+                            displayPrice = finalPrice;
+                        } else { // 偶數
+                            finalPrice = (quantity / 2) * 175;
+                            displayPrice = finalPrice;
+                        }
+
+                        if (quantity == 1) {
+                            details += `${detailsCount}. ${itemName} * ${quantity} = ${quantity * price} 元<br>`;
+                        } else {
+                            details += `${detailsCount}. ${itemName} (原價 1 份 100 元) * ${quantity} = (優惠價組合價) ${displayPrice} 元<br>`;
+                        }
+                        total += finalPrice;
+                        detailsCount++;
                     } else {
                         total += quantity * price;
-                        details += `${detailsCount}. ${itemName} * ${quantity}<br>`;
+                        details += `${detailsCount}. ${itemName} * ${quantity} = ${quantity * price} 元<br>`;
                         detailsCount++;
                     }
                 }
@@ -249,9 +272,9 @@
                 -------------------------------------------<br>
                 訂單時間：${nowFormatted}<br>
                 -------------------------------------------<br>
-                <strong>單項明細</strong><br>
+                <strong>單點訂單明細</strong><br>
                 ${details}
-                <span class="discount-text">單項總價：${total} 元</span>
+                <span class="discount-text">單點總金額：${total} 元</span>
             `;
             
             // 如果有組合商品，加上分隔線和組合明細
@@ -259,10 +282,10 @@
                 fullOutput += `
                     <br>
                     -------------------------------------------<br>
-                    <strong>優惠組合明細</strong><br>
+                    <strong>優惠組合訂單明細</strong><br>
                     ${comboDetails}
                     <br>
-                    <span class="discount-text">組合總價：${comboTotal} 元</span>
+                    <span class="discount-text">組合總金額：${comboTotal} 元</span>
                 `;
                 total += comboTotal;
             }
