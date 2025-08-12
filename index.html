@@ -34,13 +34,18 @@
             width: 80px;
             font-weight: bold;
         }
+
+        .discount-text {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 
 <body>
 
     <h1>麻老六滷味訂單-測試</h1>
-    <img src="images/logo.png" alt="" style="max-width:10%; height:auto;"> 
+    <img src="images/logo.png" alt="" style="max-width:20%; height:auto;">
     <fieldset>
         <legend>訂單資訊</legend>
         <div class="info-field">
@@ -63,7 +68,7 @@
         <p>份量依照訂購單為主，此工具主要用來方便統計及確認。</p>
         <div class="item">
             <label>鴨頭 (100元/份)</label>
-            <input type="number" data-price="175" value="0" min="0">
+            <input type="number" data-price="100" value="0" min="0">
         </div>
         <div class="item">
             <label>鴨翅 (175元/份)</label>
@@ -141,6 +146,17 @@
             <label>B組合（芋粿+米血+甜不辣）(80元/份)</label>
             <input type="number" data-price="80" value="0" min="0">
         </div>
+        
+        <hr>
+        
+        <div class="item" data-combo-item="true">
+            <label>超值豪華組合 (850元/份)</label>
+            <input type="number" data-price="850" value="0" min="0" id="luxuryCombo">
+        </div>
+        <div class="item" data-combo-item="true">
+            <label>精選旗艦組合 (600元/份)</label>
+            <input type="number" data-price="600" value="0" min="0" id="flagshipCombo">
+        </div>
     </div>
 
     <hr>
@@ -163,19 +179,15 @@
             const items = document.querySelectorAll('#menu .item input');
             let total = 0;
             let details = '';
-            let count = 1; // 新增計數器
+            let comboDetails = '';
+            let comboTotal = 0;
+            let detailsCount = 1;
+            let comboCount = 1;
 
-            items.forEach(item => {
-                const quantity = parseInt(item.value);
-                const price = parseInt(item.getAttribute('data-price'));
-                const itemName = item.previousElementSibling.textContent.split('(')[0].trim();
-
-                if (quantity > 0) {
-                    total += quantity * price;
-                    details += `${count}. ${itemName} * ${quantity}<br>`; // 這裡加上編號
-                    count++; // 每次加入一個品項，計數器就增加
-                }
-            });
+            // 抓取兩個新組合的數量
+            const luxuryComboQuantity = parseInt(document.getElementById("luxuryCombo").value);
+            const flagshipComboQuantity = parseInt(document.getElementById("flagshipCombo").value);
+            const totalComboQuantity = luxuryComboQuantity + flagshipComboQuantity;
 
             // 獲取並格式化當前時間
             const now = new Date();
@@ -187,8 +199,47 @@
             const seconds = now.getSeconds().toString().padStart(2, '0');
             const nowFormatted = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 
+            // 設定促銷活動截止日期
+            const promotionEndDate = new Date('2025-08-31T23:59:59');
+
+            items.forEach(item => {
+                const quantity = parseInt(item.value);
+                const price = parseInt(item.getAttribute('data-price'));
+                const itemName = item.previousElementSibling.textContent.split('(')[0].trim();
+                
+                if (quantity > 0) {
+                    // 判斷是否為組合商品
+                    if (itemName.includes('超值豪華組合') || itemName.includes('精選旗艦組合')) {
+                        let finalPrice = price; // 預設為原價
+                        if (now < promotionEndDate) {
+                            if (itemName.includes('超值豪華組合')) {
+                                if (luxuryComboQuantity >= 10) {
+                                    finalPrice = 725;
+                                } else {
+                                    finalPrice = 765;
+                                }
+                            } else if (itemName.includes('精選旗艦組合')) {
+                                if (flagshipComboQuantity >= 10) {
+                                    finalPrice = 510;
+                                } else {
+                                    finalPrice = 540;
+                                }
+                            }
+                        }
+                        
+                        comboTotal += quantity * finalPrice;
+                        comboDetails += `${comboCount}. ${itemName} (優惠價 ${finalPrice}) * ${quantity} = ${quantity * finalPrice} 元<br>`;
+                        comboCount++;
+                    } else {
+                        total += quantity * price;
+                        details += `${detailsCount}. ${itemName} * ${quantity}<br>`;
+                        detailsCount++;
+                    }
+                }
+            });
+
             // 將所有資訊組合在一起
-            const fullOutput = `
+            let fullOutput = `
                 請利用螢幕截圖, 截取"訂購資訊"<br>
                 -------------------------------------------<br>
                 <strong>訂購資訊</strong><br>
@@ -198,7 +249,25 @@
                 -------------------------------------------<br>
                 訂單時間：${nowFormatted}<br>
                 -------------------------------------------<br>
+                <strong>單項明細</strong><br>
                 ${details}
+                <span class="discount-text">單項總價：${total} 元</span>
+            `;
+            
+            // 如果有組合商品，加上分隔線和組合明細
+            if (comboDetails !== '') {
+                fullOutput += `
+                    <br>
+                    -------------------------------------------<br>
+                    <strong>優惠組合明細</strong><br>
+                    ${comboDetails}
+                    <br>
+                    <span class="discount-text">組合總價：${comboTotal} 元</span>
+                `;
+                total += comboTotal;
+            }
+
+            fullOutput += `
                 <br>
                 <span style="font-size: 24px; font-weight: bold;">總金額：${total} 元</span>
             `;
