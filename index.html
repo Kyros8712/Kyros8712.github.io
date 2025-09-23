@@ -58,7 +58,15 @@
         </div>
         <div class="info-field">
             <label for="leader">取貨方式：</label>
-            <input type="text" id="leader">
+            <select id="leader" onchange="updatePickupField()">
+                <option value="自取" data-fee="0">自取</option>
+                <option value="店到店" data-fee="100">店到店 (+$100)</option>
+                <option value="宅配" data-fee="250">宅配 (+$250)</option>
+            </select>
+        </div>
+        <div class="info-field" id="pickupExtraField">
+            <label id="pickupExtraLabel">自取位置：</label>
+            <input type="text" id="pickupExtraInput">
         </div>
     </fieldset>
 
@@ -169,13 +177,36 @@
     </div>
 
     <script>
+        function updatePickupField() {
+            const leaderSelect = document.getElementById("leader");
+            const selectedOption = leaderSelect.options[leaderSelect.selectedIndex];
+            const extraField = document.getElementById("pickupExtraField");
+            const extraLabel = document.getElementById("pickupExtraLabel");
+            const extraInput = document.getElementById("pickupExtraInput");
+
+            if (selectedOption.value === "自取") {
+                extraLabel.textContent = "自取位置：";
+                extraField.style.display = "block";
+            } else if (selectedOption.value === "店到店") {
+                extraLabel.textContent = "店家資訊：";
+                extraField.style.display = "block";
+            } else if (selectedOption.value === "宅配") {
+                extraLabel.textContent = "宅配地址：";
+                extraField.style.display = "block";
+            } else {
+                extraField.style.display = "none";
+            }
+        }
+
         function calculateTotal() {
-            // 抓取訂單資訊
             const orderer = document.getElementById("orderer").value;
             const phone = document.getElementById("phone").value;
-            const leader = document.getElementById("leader").value;
+            const leaderSelect = document.getElementById("leader");
+            const selectedOption = leaderSelect.options[leaderSelect.selectedIndex];
+            const leader = selectedOption.value;
+            const shippingFee = parseInt(selectedOption.getAttribute("data-fee"));
+            const pickupExtra = document.getElementById("pickupExtraInput").value;
 
-            // 抓取品項並計算總價
             const items = document.querySelectorAll('#menu .item input');
             let total = 0;
             let details = '';
@@ -184,12 +215,9 @@
             let detailsCount = 1;
             let comboCount = 1;
 
-            // 抓取兩個新組合的數量
             const luxuryComboQuantity = parseInt(document.getElementById("luxuryCombo").value);
             const flagshipComboQuantity = parseInt(document.getElementById("flagshipCombo").value);
-            const totalComboQuantity = luxuryComboQuantity + flagshipComboQuantity;
 
-            // 獲取並格式化當前時間
             const now = new Date();
             const year = now.getFullYear();
             const month = (now.getMonth() + 1).toString().padStart(2, '0');
@@ -199,7 +227,6 @@
             const seconds = now.getSeconds().toString().padStart(2, '0');
             const nowFormatted = `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 
-            // 設定促銷活動截止日期
             const promotionEndDate = new Date('2025-09-10T23:59:59');
 
             items.forEach(item => {
@@ -208,9 +235,8 @@
                 const itemName = item.previousElementSibling.textContent.split('(')[0].trim();
                 
                 if (quantity > 0) {
-                    // 判斷是否為組合商品
                     if (itemName.includes('超值豪華組合') || itemName.includes('精選旗艦組合')) {
-                        let finalPrice = price; // 預設為原價
+                        let finalPrice = price;
                         let discountMessage = '';
                         if (now < promotionEndDate) {
                             if (itemName.includes('超值豪華組合')) {
@@ -231,17 +257,16 @@
                                 }
                             }
                         }
-                        
                         comboTotal += quantity * finalPrice;
                         comboDetails += `${comboCount}. ${itemName} (${discountMessage} ${finalPrice} 元) * ${quantity} = ${quantity * finalPrice} 元<br>`;
                         comboCount++;
-                    }  else if (itemName.includes('鴨頭')) {
+                    } else if (itemName.includes('鴨頭')) {
                         let finalPrice;
                         let displayPrice;
-                        if (quantity % 2 !== 0) { // 奇數
+                        if (quantity % 2 !== 0) {
                             finalPrice = 100 + ((quantity - 1) / 2) * 175;
                             displayPrice = finalPrice;
-                        } else { // 偶數
+                        } else {
                             finalPrice = (quantity / 2) * 175;
                             displayPrice = finalPrice;
                         }
@@ -261,14 +286,14 @@
                 }
             });
 
-            // 將所有資訊組合在一起
             let fullOutput = `
                 請利用螢幕截圖, 截取"訂購資訊"<br>
                 -------------------------------------------<br>
                 <strong>訂購資訊</strong><br>
                 訂購人：${orderer}<br>
                 電話：${phone}<br>
-                取貨方式：${leader}<br>
+                取貨方式：${leader} (+${shippingFee} 元)<br>
+                ${pickupExtra ? "詳細：" + pickupExtra + "<br>" : ""}
                 -------------------------------------------<br>
                 訂單時間：${nowFormatted}<br>
                 -------------------------------------------<br>
@@ -276,8 +301,7 @@
                 ${details}
                 <span class="discount-text">單點總金額：${total} 元</span>
             `;
-            
-            // 如果有組合商品，加上分隔線和組合明細
+
             if (comboDetails !== '') {
                 fullOutput += `
                     <br>
@@ -290,12 +314,15 @@
                 total += comboTotal;
             }
 
+            total += shippingFee;
+
             fullOutput += `
+                <br>
+                <span class="discount-text">運費：${shippingFee} 元</span>
                 <br>
                 <span style="font-size: 36px; font-weight: bold;">總金額：${total} 元</span>
             `;
 
-            // 輸出結果到同一個區塊
             document.getElementById('outputDetails').innerHTML = fullOutput;
         }
     </script>
