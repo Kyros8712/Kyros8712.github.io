@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Shopping App</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- html2canvas for screenshots -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+
+  <!-- Sidebar Navigation -->
+  <nav id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <button id="close-sidebar" class="close-btn">&times;</button>
+    </div>
+    <ul class="nav-links">
+      <li data-target="home">首頁</li>
+      <li data-target="menu">菜單</li>
+      <li data-target="order-info">訂購</li>
+      <li data-target="about">關於品牌</li>
+      <li data-target="contact">聯絡資訊</li>
+    </ul>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main id="main-content">
+    <!-- Toggle Button (Visible when sidebar is closed) -->
+    <button id="open-sidebar" class="menu-btn">☰</button>
+
+    <!-- Pages -->
+
+    <!-- Home Page -->
+    <section id="home" class="page active">
+      <div class="hero">
+        <img src="https://placehold.co/600x400?text=Brand+Image" alt="Brand Hero" class="hero-img">
+        <button id="hero-menu-btn" class="cta-btn">查看選單</button>
+      </div>
+    </section>
+
+    <!-- Menu Page -->
+    <section id="menu" class="page hidden">
+      <h2>我們的菜單</h2>
+      <div class="menu-grid" id="menu-grid">
+        <!-- Menu items will be injected here by JS -->
+      </div>
+    </section>
+
+    <!-- Order Info Page -->
+    <section id="order-info" class="page hidden">
+      <h2>訂購資訊</h2>
+      <form id="order-form">
+        <div class="form-group">
+          <label for="name">姓名</label>
+          <input type="text" id="name" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">電話</label>
+          <input type="tel" id="phone" required>
+        </div>
+        <div class="form-group">
+          <label>取貨方式</label>
+          <div class="radio-group">
+            <label><input type="radio" name="delivery" value="pickup" checked> 自取</label>
+            <label><input type="radio" name="delivery" value="delivery"> 宅配</label>
+            <label><input type="radio" name="delivery" value="store"> 店到店</label>
+          </div>
+        </div>
+
+        <!-- Dynamic Fields -->
+        <div id="address-field" class="form-group hidden">
+          <label for="address">地址</label>
+          <input type="text" id="address">
+        </div>
+        <div id="store-fields" class="form-group hidden">
+          <label for="store-id">7-11 店號</label>
+          <input type="text" id="store-id">
+          <label for="store-name">店名</label>
+          <input type="text" id="store-name">
+        </div>
+
+        <button type="submit" class="submit-btn">確認資料</button>
+      </form>
+    </section>
+
+    <!-- Shopping Page (After Order Info) -->
+    <section id="shopping" class="page hidden">
+      <h2>購物選單</h2>
+      <div class="product-list" id="product-list">
+        <!-- Products injected by JS -->
+      </div>
+    </section>
+
+    <!-- Checkout Page -->
+    <section id="checkout" class="page hidden">
+      <h2>結帳確認</h2>
+      <div id="checkout-summary"></div>
+      <button id="confirm-order-btn" class="submit-btn">確認訂單</button>
+    </section>
+
+    <!-- Receipt Page -->
+    <section id="receipt" class="page hidden">
+      <h2>訂單明細</h2>
+      <div id="receipt-content" class="receipt-card">
+        <!-- Receipt details injected here -->
+      </div>
+      <div class="receipt-actions">
+        <button id="screenshot-btn" class="action-btn">截圖保存</button>
+        <button id="copy-btn" class="action-btn">複製文字</button>
+      </div>
+    </section>
+
+    <!-- About Page -->
+    <section id="about" class="page hidden">
+      <h2>關於品牌</h2>
+      <p>這是一個優質的品牌...</p>
+    </section>
+
+    <!-- Contact Page -->
+    <section id="contact" class="page hidden">
+      <h2>聯絡資訊</h2>
+      <p>電話: 0912-345-678</p>
+    </section>
+
+  </main>
+
+  <!-- Floating Cart Button -->
+  <div id="cart-fab" class="cart-fab hidden">
+    🛒 <span id="cart-count">0</span>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <h3>確認資料</h3>
+      <div id="modal-body"></div>
+      <div class="modal-actions">
+        <button id="modal-cancel">修改</button>
+        <button id="modal-confirm">確認</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
