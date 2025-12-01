@@ -3,20 +3,23 @@ document.addEventListener('DOMContentLoaded', () => {
     let cart = {}; // { itemId: quantity }
     let userInfo = {};
 
+    // Load Images
+    document.getElementById('hero-img').src = APP_IMAGES.hero;
+
     // Mock Data
     const products = [
-        { id: 1, name: '經典漢堡', price: 150, img: 'https://placehold.co/150?text=Burger' },
-        { id: 2, name: '炸雞套餐', price: 200, img: 'https://placehold.co/150?text=Chicken' },
-        { id: 3, name: '薯條', price: 60, img: 'https://placehold.co/150?text=Fries' },
-        { id: 4, name: '可樂', price: 40, img: 'https://placehold.co/150?text=Coke' },
-        { id: 5, name: '沙拉', price: 120, img: 'https://placehold.co/150?text=Salad' },
-        { id: 6, name: '冰淇淋', price: 80, img: 'https://placehold.co/150?text=IceCream' },
-        { id: 7, name: '洋蔥圈', price: 70, img: 'https://placehold.co/150?text=OnionRings' },
-        { id: 8, name: '雞塊', price: 90, img: 'https://placehold.co/150?text=Nuggets' },
-        { id: 9, name: '檸檬紅茶', price: 45, img: 'https://placehold.co/150?text=LemonTea' },
-        { id: 10, name: '咖啡', price: 65, img: 'https://placehold.co/150?text=Coffee' },
-        { id: 11, name: '三明治', price: 85, img: 'https://placehold.co/150?text=Sandwich' },
-        { id: 12, name: '披薩', price: 250, img: 'https://placehold.co/150?text=Pizza' }
+        { id: 1, name: '經典漢堡', price: 150, img: APP_IMAGES.products[1] },
+        { id: 2, name: '炸雞套餐', price: 200, img: APP_IMAGES.products[2] },
+        { id: 3, name: '薯條', price: 60, img: APP_IMAGES.products[3] },
+        { id: 4, name: '可樂', price: 40, img: APP_IMAGES.products[4] },
+        { id: 5, name: '沙拉', price: 120, img: APP_IMAGES.products[5] },
+        { id: 6, name: '冰淇淋', price: 80, img: APP_IMAGES.products[6] },
+        { id: 7, name: '洋蔥圈', price: 70, img: APP_IMAGES.products[7] },
+        { id: 8, name: '雞塊', price: 90, img: APP_IMAGES.products[8] },
+        { id: 9, name: '檸檬紅茶', price: 45, img: APP_IMAGES.products[9] },
+        { id: 10, name: '咖啡', price: 65, img: APP_IMAGES.products[10] },
+        { id: 11, name: '三明治', price: 85, img: APP_IMAGES.products[11] },
+        { id: 12, name: '披薩', price: 250, img: APP_IMAGES.products[12] }
     ];
 
     // DOM Elements
